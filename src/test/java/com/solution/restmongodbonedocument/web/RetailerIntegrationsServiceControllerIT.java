@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpEntity;
@@ -35,9 +34,6 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class RetailerIntegrationsServiceControllerIT {
-
-    @LocalServerPort
-    private int port;
 
     @Autowired
     TestRestTemplate restTemplate;
@@ -108,7 +104,7 @@ public class RetailerIntegrationsServiceControllerIT {
         RetailerIntegration integration = new RetailerIntegration("4th Integration", "4th description", new ArrayList<>());
         HttpEntity<RetailerIntegration> httpEntity = new HttpEntity<>(integration);
         ResponseEntity<RetailerIntegration> responseEntity1 =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/", port), HttpMethod.POST,
+                restTemplate.exchange("/api/retailerIntegrations/", HttpMethod.POST,
                         httpEntity, new ParameterizedTypeReference<RetailerIntegration>() {
                         });
         assertThat(responseEntity1.getStatusCode().value(), is(200));
@@ -119,7 +115,7 @@ public class RetailerIntegrationsServiceControllerIT {
         assertEquals(retailerIntegration.getDescription(), integration.getDescription());
 
         ResponseEntity<List<RetailerIntegration>> responseEntity2 =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/", port), HttpMethod.GET,
+                restTemplate.exchange("/api/retailerIntegrations/", HttpMethod.GET,
                         null, new ParameterizedTypeReference<List<RetailerIntegration>>() {
                         });
         List<RetailerIntegration> actualList = responseEntity2.getBody();
@@ -134,7 +130,7 @@ public class RetailerIntegrationsServiceControllerIT {
     @Test
     public void getAllRetailerIntegration() throws Exception {
         ResponseEntity<List<RetailerIntegration>> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/", port), HttpMethod.GET,
+                restTemplate.exchange("/api/retailerIntegrations/", HttpMethod.GET,
                         null, new ParameterizedTypeReference<List<RetailerIntegration>>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(200));
@@ -154,7 +150,7 @@ public class RetailerIntegrationsServiceControllerIT {
     @Test
     public void getRetailerIntegrationById() {
         ResponseEntity<RetailerIntegration> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId1", port), HttpMethod.GET,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId1", HttpMethod.GET,
                         null, new ParameterizedTypeReference<RetailerIntegration>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(200));
@@ -167,7 +163,7 @@ public class RetailerIntegrationsServiceControllerIT {
     @Test
     public void getRetailerIntegrationWrongId() {
         ResponseEntity<RetailerIntegration> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/nonExistId", port), HttpMethod.GET,
+                restTemplate.exchange("/api/retailerIntegrations/nonExistId", HttpMethod.GET,
                         null, new ParameterizedTypeReference<RetailerIntegration>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(404));
@@ -186,7 +182,7 @@ public class RetailerIntegrationsServiceControllerIT {
         );
         HttpEntity<RetailerIntegration> httpEntity = new HttpEntity<>(integration);
         ResponseEntity<RetailerIntegration> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId3", port), HttpMethod.PUT,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId3", HttpMethod.PUT,
                         httpEntity, new ParameterizedTypeReference<RetailerIntegration>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(200));
@@ -200,7 +196,7 @@ public class RetailerIntegrationsServiceControllerIT {
     @Test
     public void deleteRetailerIntegration() {
         ResponseEntity<RetailerIntegration> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId1", port), HttpMethod.DELETE,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId1", HttpMethod.DELETE,
                         null, new ParameterizedTypeReference<RetailerIntegration>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(200));
@@ -209,7 +205,7 @@ public class RetailerIntegrationsServiceControllerIT {
     @Test
     public void getAllRetailerGroupByRetailerIntegrationId() {
         ResponseEntity<List<RetailerGroup>> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId1/groups", port), HttpMethod.GET,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId1/groups", HttpMethod.GET,
                         null, new ParameterizedTypeReference<List<RetailerGroup>>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(200));
@@ -231,7 +227,7 @@ public class RetailerIntegrationsServiceControllerIT {
         );
         HttpEntity<RetailerGroup> httpEntity = new HttpEntity<>(group);
         ResponseEntity<RetailerGroup> responseEntity1 =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId3/groups", port), HttpMethod.POST,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId3/groups", HttpMethod.POST,
                         httpEntity, new ParameterizedTypeReference<RetailerGroup>() {
                         });
         assertThat(responseEntity1.getStatusCode().value(), is(200));
@@ -251,7 +247,7 @@ public class RetailerIntegrationsServiceControllerIT {
         );
         HttpEntity<RetailerGroup> httpEntity = new HttpEntity<>(group);
         ResponseEntity<RetailerGroup> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/nonexistId/groups", port), HttpMethod.POST,
+                restTemplate.exchange("/api/retailerIntegrations/nonexistId/groups", HttpMethod.POST,
                         httpEntity, new ParameterizedTypeReference<RetailerGroup>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(404));
@@ -260,7 +256,7 @@ public class RetailerIntegrationsServiceControllerIT {
     @Test
     public void getRetailerGroupById() {
         ResponseEntity<RetailerGroup> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId2/groups/groupId202", port), HttpMethod.GET,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId2/groups/groupId202", HttpMethod.GET,
                         null, new ParameterizedTypeReference<RetailerGroup>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(200));
@@ -273,7 +269,7 @@ public class RetailerIntegrationsServiceControllerIT {
     @Test
     public void getRetailerGroupByIdWrongIntId() {
         ResponseEntity<RetailerGroup> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/wrongId/groups/groupId202", port), HttpMethod.GET,
+                restTemplate.exchange("/api/retailerIntegrations/wrongId/groups/groupId202", HttpMethod.GET,
                         null, new ParameterizedTypeReference<RetailerGroup>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(404));
@@ -282,7 +278,7 @@ public class RetailerIntegrationsServiceControllerIT {
     @Test
     public void getRetailerGroupByWrongId() {
         ResponseEntity<RetailerGroup> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId2/groups/wrongId", port), HttpMethod.GET,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId2/groups/wrongId", HttpMethod.GET,
                         null, new ParameterizedTypeReference<RetailerGroup>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(404));
@@ -297,7 +293,7 @@ public class RetailerIntegrationsServiceControllerIT {
         );
         HttpEntity<RetailerGroup> httpEntity = new HttpEntity<>(group);
         ResponseEntity<RetailerGroup> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId3/groups/groupId301", port), HttpMethod.PUT,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId3/groups/groupId301", HttpMethod.PUT,
                         httpEntity, new ParameterizedTypeReference<RetailerGroup>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(200));
@@ -316,7 +312,7 @@ public class RetailerIntegrationsServiceControllerIT {
         );
         HttpEntity<RetailerGroup> httpEntity = new HttpEntity<>(group);
         ResponseEntity<RetailerGroup> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/wrongId/groups/groupId301", port), HttpMethod.PUT,
+                restTemplate.exchange("/api/retailerIntegrations/wrongId/groups/groupId301", HttpMethod.PUT,
                         httpEntity, new ParameterizedTypeReference<RetailerGroup>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(404));
@@ -331,7 +327,7 @@ public class RetailerIntegrationsServiceControllerIT {
         );
         HttpEntity<RetailerGroup> httpEntity = new HttpEntity<>(group);
         ResponseEntity<RetailerGroup> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId3/groups/wrongId", port), HttpMethod.PUT,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId3/groups/wrongId", HttpMethod.PUT,
                         httpEntity, new ParameterizedTypeReference<RetailerGroup>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(404));
@@ -340,7 +336,7 @@ public class RetailerIntegrationsServiceControllerIT {
     @Test
     public void deleteRetailerGroup() {
         ResponseEntity<RetailerGroup> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId1/groups/groupId103", port), HttpMethod.DELETE,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId1/groups/groupId103", HttpMethod.DELETE,
                         null, new ParameterizedTypeReference<RetailerGroup>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(200));
@@ -350,7 +346,7 @@ public class RetailerIntegrationsServiceControllerIT {
     @Test
     public void getAllRetailerProfileByRetailerIntegrationId() {
         ResponseEntity<List<RetailerProfile>> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId1/groups/groupId102/profile", port), HttpMethod.GET,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId1/groups/groupId102/profile", HttpMethod.GET,
                         null, new ParameterizedTypeReference<List<RetailerProfile>>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(200));
@@ -368,7 +364,7 @@ public class RetailerIntegrationsServiceControllerIT {
         RetailerProfile profile = new RetailerProfile("3102st Profile", "3102st description");
         HttpEntity<RetailerProfile> httpEntity = new HttpEntity<>(profile);
         ResponseEntity<RetailerProfile> responseEntity1 =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId3/groups/groupId301/profile", port), HttpMethod.POST,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId3/groups/groupId301/profile", HttpMethod.POST,
                         httpEntity, new ParameterizedTypeReference<RetailerProfile>() {
                         });
         assertThat(responseEntity1.getStatusCode().value(), is(200));
@@ -384,7 +380,7 @@ public class RetailerIntegrationsServiceControllerIT {
         RetailerProfile profile = new RetailerProfile("3102st Profile", "3102st description");
         HttpEntity<RetailerProfile> httpEntity = new HttpEntity<>(profile);
         ResponseEntity<RetailerProfile> responseEntity1 =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/wrongId/groups/groupId301/profile", port), HttpMethod.POST,
+                restTemplate.exchange("/api/retailerIntegrations/wrongId/groups/groupId301/profile", HttpMethod.POST,
                         httpEntity, new ParameterizedTypeReference<RetailerProfile>() {
                         });
         assertThat(responseEntity1.getStatusCode().value(), is(404));
@@ -395,7 +391,7 @@ public class RetailerIntegrationsServiceControllerIT {
         RetailerProfile profile = new RetailerProfile("3102st Profile", "3102st description");
         HttpEntity<RetailerProfile> httpEntity = new HttpEntity<>(profile);
         ResponseEntity<RetailerProfile> responseEntity1 =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId3/groups/wrongId/profile", port), HttpMethod.POST,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId3/groups/wrongId/profile", HttpMethod.POST,
                         httpEntity, new ParameterizedTypeReference<RetailerProfile>() {
                         });
         assertThat(responseEntity1.getStatusCode().value(), is(404));
@@ -404,7 +400,7 @@ public class RetailerIntegrationsServiceControllerIT {
     @Test
     public void getRetailerProfileById() {
         ResponseEntity<RetailerGroup> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId2/groups/groupId202/profile/profileId2202", port), HttpMethod.GET,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId2/groups/groupId202/profile/profileId2202", HttpMethod.GET,
                         null, new ParameterizedTypeReference<RetailerGroup>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(200));
@@ -417,7 +413,7 @@ public class RetailerIntegrationsServiceControllerIT {
     @Test
     public void getRetailerProfileByIdWrongIntegrId() {
         ResponseEntity<RetailerGroup> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/wrongId/groups/groupId202/profile/profileId2202", port), HttpMethod.GET,
+                restTemplate.exchange("/api/retailerIntegrations/wrongId/groups/groupId202/profile/profileId2202", HttpMethod.GET,
                         null, new ParameterizedTypeReference<RetailerGroup>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(404));
@@ -426,7 +422,7 @@ public class RetailerIntegrationsServiceControllerIT {
     @Test
     public void getRetailerProfileByIdWrongGroupId() {
         ResponseEntity<RetailerGroup> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId2/groups/wrongId/profile/profileId2202", port), HttpMethod.GET,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId2/groups/wrongId/profile/profileId2202", HttpMethod.GET,
                         null, new ParameterizedTypeReference<RetailerGroup>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(404));
@@ -435,7 +431,7 @@ public class RetailerIntegrationsServiceControllerIT {
     @Test
     public void getRetailerProfileByIdWrongProfileId() {
         ResponseEntity<RetailerGroup> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId2/groups/groupId202/profile/wrongId", port), HttpMethod.GET,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId2/groups/groupId202/profile/wrongId", HttpMethod.GET,
                         null, new ParameterizedTypeReference<RetailerGroup>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(404));
@@ -446,7 +442,7 @@ public class RetailerIntegrationsServiceControllerIT {
         RetailerProfile profile = new RetailerProfile("profileId3101", "New 3201st Profile", "Changed 3201st description");
         HttpEntity<RetailerProfile> httpEntity = new HttpEntity<>(profile);
         ResponseEntity<RetailerProfile> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId3/groups/groupId301/profile/profileId3101", port), HttpMethod.PUT,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId3/groups/groupId301/profile/profileId3101", HttpMethod.PUT,
                         httpEntity, new ParameterizedTypeReference<RetailerProfile>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(200));
@@ -461,7 +457,7 @@ public class RetailerIntegrationsServiceControllerIT {
         RetailerProfile profile = new RetailerProfile("profileId3101", "New 3201st Profile", "Changed 3201st description");
         HttpEntity<RetailerProfile> httpEntity = new HttpEntity<>(profile);
         ResponseEntity<RetailerProfile> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/wrongId/groups/groupId301/profile/profileId3101", port), HttpMethod.PUT,
+                restTemplate.exchange("/api/retailerIntegrations/wrongId/groups/groupId301/profile/profileId3101", HttpMethod.PUT,
                         httpEntity, new ParameterizedTypeReference<RetailerProfile>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(404));
@@ -472,7 +468,7 @@ public class RetailerIntegrationsServiceControllerIT {
         RetailerProfile profile = new RetailerProfile("profileId3101", "New 3201st Profile", "Changed 3201st description");
         HttpEntity<RetailerProfile> httpEntity = new HttpEntity<>(profile);
         ResponseEntity<RetailerProfile> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId3/groups/wrongId/profile/profileId3101", port), HttpMethod.PUT,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId3/groups/wrongId/profile/profileId3101", HttpMethod.PUT,
                         httpEntity, new ParameterizedTypeReference<RetailerProfile>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(404));
@@ -483,7 +479,7 @@ public class RetailerIntegrationsServiceControllerIT {
         RetailerProfile profile = new RetailerProfile("profileId3101", "New 3201st Profile", "Changed 3201st description");
         HttpEntity<RetailerProfile> httpEntity = new HttpEntity<>(profile);
         ResponseEntity<RetailerProfile> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId3/groups/groupId301/profile/wrongId", port), HttpMethod.PUT,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId3/groups/groupId301/profile/wrongId", HttpMethod.PUT,
                         httpEntity, new ParameterizedTypeReference<RetailerProfile>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(404));
@@ -492,7 +488,7 @@ public class RetailerIntegrationsServiceControllerIT {
     @Test
     public void deleteRetailerProfile() {
         ResponseEntity<RetailerProfile> responseEntity =
-                restTemplate.exchange(String.format("http://localhost:%d/api/retailerIntegrations/integrationId1/groups/groupId103/profile/profileId1303", port), HttpMethod.DELETE,
+                restTemplate.exchange("/api/retailerIntegrations/integrationId1/groups/groupId103/profile/profileId1303", HttpMethod.DELETE,
                         null, new ParameterizedTypeReference<RetailerProfile>() {
                         });
         assertThat(responseEntity.getStatusCode().value(), is(200));
